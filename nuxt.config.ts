@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     baseURL: '/ts_danbooru-tag_editor/',
     buildAssetsDir: 'assets',
   },
+  ssr: false, // サーバーは使用不可
   srcDir: 'src/',
   css: ["~/assets/css/main.css"],
   postcss: {
