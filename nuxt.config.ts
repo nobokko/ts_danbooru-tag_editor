@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     baseURL: '/ts_danbooru-tag_editor/',
     buildAssetsDir: 'assets',
   },
-  srcDir: './src',
+  srcDir: 'src/',
   css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
