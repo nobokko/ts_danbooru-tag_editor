@@ -1,0 +1,1 @@
+import{d as a,r as n,o as s,v as t,L as r,M as c,t as o}from"./entry.Zgtig43t.js";const _={class:"flex flex-col gap-y-1"},d={key:0},i=a({__name:"[tagname]",setup(l){const e=n(!1);return s(()=>{e.value=!0}),(m,u)=>(o(),t("div",_,[r(e)?c("",!0):(o(),t("div",d,"loading..."))]))}});export{i as default};
