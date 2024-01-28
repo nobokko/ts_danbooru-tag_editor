@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { useTag } from '~/composable/tags'
+import { useTag, useTagList } from '~/composable/tags'
+
+const refTagList = storeToRefs(useTagList()).refTagList
 
 const refA = storeToRefs(
   defineStore(
@@ -54,11 +56,13 @@ const computedB = computed(() => {
   return [...refC.value]
 })
 
-const conputedTaginfos = computed(() => {
+const computedTaginfos = computed(() => {
   return computedB.value.map((str) => {
     const store = useTag(str)
 
-    return store.refTaginfo.attributes.join(',')
+    return [store.refTaginfo.discription, ...store.refTaginfo.attributes].join(
+      ',',
+    )
   })
 })
 
@@ -94,11 +98,23 @@ onMounted(() => {
       <template v-for="(value, index) in refC" :key="index">
         <input type="text" v-model="refC[index]" class="w-[30%] flex-grow" />
         <div class="w-[60%] flex-grow">
-          <span>{{ conputedTaginfos[index] }}</span
+          <span>{{ computedTaginfos[index] }}</span
           ><NuxtLink class="border rounded" :to="`./tags/${value}`"
             >edit</NuxtLink
           >
         </div>
+      </template>
+    </div>
+    <div>
+      <template v-for="(value, index) in refTagList.tags.sort()" :key="index">
+        <span v-if="index !== 0">&nbsp;</span>
+        <span
+          :class="{
+            'bg-blue-200': index % 2 === 0,
+            'bg-red-200': index % 2 === 1,
+          }"
+          >{{ value }}</span
+        >
       </template>
     </div>
   </div>

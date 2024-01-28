@@ -1,11 +1,30 @@
 import { defineStore } from 'pinia'
 
+export const useTagList = () => (defineStore('tag-list', () => {
+    const refTagList = ref({
+        version: 2,
+        tags: [] as string[],
+    })
+
+    return { refTagList }
+}, {
+    persist: {
+        storage: persistedState.localStorage,
+    },
+}))()
+
 export const useTag = (tagname: string) => {
+    const tagListStore = useTagList()
+    if (tagListStore.refTagList.tags.find(str => str === tagname) === undefined) {
+        tagListStore.refTagList.tags = [...tagListStore.refTagList.tags, tagname]
+    }
+
     const useStore = defineStore(
         `tags/${tagname}`,
         () => {
             const refTaginfo = ref({
-                version: 1,
+                version: 2,
+                discription: '',
                 attributes: [] as string[],
             })
 
@@ -26,5 +45,12 @@ export const useTag = (tagname: string) => {
         },
     )
 
-    return useStore()
+    const store = useStore()
+
+    if (store.refTaginfo.version === 1) {
+        store.refTaginfo.discription = ''
+        store.refTaginfo.version = 2
+    }
+
+    return store
 }
