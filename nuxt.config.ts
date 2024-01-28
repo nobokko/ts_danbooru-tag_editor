@@ -6,7 +6,10 @@ export default defineNuxtConfig({
     cdnURL: '/ts_danbooru-tag_editor/',
     buildAssetsDir: 'assets',
   },
-  // ssr: false, // サーバーは使用不可
+  modules: [
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+  ],
   srcDir: 'src/',
   css: ["~/assets/css/main.css"],
   postcss: {
