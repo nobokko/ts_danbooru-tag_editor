@@ -1,5 +1,5 @@
 <template>
-  <main class="lg:w-9/12">
+  <main>
     <slot />
   </main>
 </template>

@@ -1,5 +1,13 @@
 <script setup lang="ts">
-const refA = ref<string>('')
+import { useTag } from '~/composable/tags'
+
+const refA = storeToRefs((defineStore('danbooru-tags', () => {
+  const words = ref<string>('')
+
+  return {words}
+}, {
+  persist: {storage: persistedState.sessionStorage}
+}))()).words
 
 const computedB = computed(() => {
   return (
@@ -10,6 +18,14 @@ const computedB = computed(() => {
       )
       .filter((str) => str.length) ?? []
   )
+})
+
+const conputedTaginfos = computed(() => {
+  return computedB.value.map((str) => {
+    const store = useTag(str)
+
+    return store.refTaginfo.attributes.join(',')
+  })
 })
 
 const refC = ref<string[]>([])
@@ -25,7 +41,7 @@ watch(computedB, (newValue, oldValue) => {
 })
 
 const sort = () => {
-    refA.value = refA.value?.split(' ').sort().join(' ')
+  refA.value = refA.value?.split(' ').sort().join(' ')
 }
 
 const mounted = ref(false)
@@ -47,7 +63,10 @@ onMounted(() => {
     <div class="flex flex-row flex-wrap">
       <template v-for="(value, index) in computedB" :key="value">
         <input type="text" v-model="refC[index]" class="w-[30%] flex-grow" />
-        <div class="w-[60%] flex-grow">{{ refC[index] }}</div>
+        <div class="w-[60%] flex-grow">
+          <span>{{ conputedTaginfos[index] }}</span
+          ><NuxtLink class="border rounded" :to="`./tags/${value}`">edit</NuxtLink>
+        </div>
       </template>
     </div>
   </div>
