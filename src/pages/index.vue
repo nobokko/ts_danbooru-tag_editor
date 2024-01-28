@@ -1,23 +1,57 @@
 <script setup lang="ts">
 import { useTag } from '~/composable/tags'
 
-const refA = storeToRefs((defineStore('danbooru-tags', () => {
-  const words = ref<string>('')
+const refA = storeToRefs(
+  defineStore(
+    'danbooru-tags',
+    () => {
+      const words = ref<string>('')
 
-  return {words}
-}, {
-  persist: {storage: persistedState.sessionStorage}
-}))()).words
+      return { words }
+    },
+    {
+      persist: { storage: persistedState.sessionStorage },
+    },
+  )(),
+).words
+
+const refC = ref<string[]>([])
+
+watch(
+  refA,
+  (newValue, oldValue) => {
+    refC.value =
+      newValue
+        ?.split(' ')
+        .map((str) =>
+          str
+            .replaceAll('_', ' ')
+            .replaceAll(/([()])/g, (substring, ...args) => `\\${args[0]}`),
+        )
+        .filter((str) => str.length) ?? []
+  },
+  { immediate: true },
+)
+
+watch(
+  refC,
+  (newValue, oldValue) => {
+    const tmp = newValue
+      .map((str) =>
+        str
+          .replaceAll(' ', '_')
+          .replaceAll(/\\([()])/g, (substring, ...args) => args[0]),
+      )
+      .join(' ')
+    if (refA.value.trim() !== tmp) {
+      refA.value = tmp
+    }
+  },
+  { deep: true },
+)
 
 const computedB = computed(() => {
-  return (
-    refA.value
-      ?.split(' ')
-      .map((str) =>
-        str.replaceAll('_', ' ').replaceAll('(', '\\(').replaceAll(')', '\\)'),
-      )
-      .filter((str) => str.length) ?? []
-  )
+  return [...refC.value]
 })
 
 const conputedTaginfos = computed(() => {
@@ -28,16 +62,10 @@ const conputedTaginfos = computed(() => {
   })
 })
 
-const refC = ref<string[]>([])
-
 watch(computedB, (newValue, oldValue) => {
-  if (newValue.length !== oldValue.length) {
-    refC.value = [...newValue]
-  } else {
-    newValue.forEach((str, index) => {
-      refC.value[index] = str
-    })
-  }
+  newValue.forEach((str, index) => {
+    refC.value[index] = str
+  })
 })
 
 const sort = () => {
@@ -48,6 +76,8 @@ const mounted = ref(false)
 
 onMounted(() => {
   mounted.value = true
+
+  refA.value = `${refA.value}`
 })
 </script>
 
@@ -61,11 +91,13 @@ onMounted(() => {
     <div>total {{ computedB.length }} word(s).</div>
     <div><button @click="sort()">Sort</button></div>
     <div class="flex flex-row flex-wrap">
-      <template v-for="(value, index) in computedB" :key="value">
+      <template v-for="(value, index) in refC" :key="index">
         <input type="text" v-model="refC[index]" class="w-[30%] flex-grow" />
         <div class="w-[60%] flex-grow">
           <span>{{ conputedTaginfos[index] }}</span
-          ><NuxtLink class="border rounded" :to="`./tags/${value}`">edit</NuxtLink>
+          ><NuxtLink class="border rounded" :to="`./tags/${value}`"
+            >edit</NuxtLink
+          >
         </div>
       </template>
     </div>
