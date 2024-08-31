@@ -88,6 +88,10 @@ const deleteInput = (index: number) => {
   refC.value[index] = ''
 }
 
+const transferToAppendInput = (value: string) => {
+  refAppendInput.value = value
+}
+
 const mounted = ref(false)
 
 onMounted(() => {
@@ -127,10 +131,12 @@ onMounted(() => {
       <template v-for="(value, index) in refTagList.tags.sort()" :key="index">
         <span v-if="index !== 0">&nbsp;</span>
         <span
+          class="cursor-pointer"
           :class="{
             'bg-blue-200': index % 2 === 0,
             'bg-red-200': index % 2 === 1,
           }"
+          @click="transferToAppendInput(value)"
           >{{ value }}</span
         >
       </template>
