@@ -76,6 +76,10 @@ const sort = () => {
   refA.value = refA.value?.split(' ').sort().join(' ')
 }
 
+const deleteInput = (index: number) => {
+  refC.value[index] = ''
+}
+
 const mounted = ref(false)
 
 onMounted(() => {
@@ -97,9 +101,10 @@ onMounted(() => {
     <div class="flex flex-row flex-wrap">
       <template v-for="(value, index) in refC" :key="index">
         <input type="text" v-model="refC[index]" class="w-[30%] flex-grow" />
-        <div class="w-[60%] flex-grow">
+        <div class="w-[10%] flex-grow"><button class="border rounded px-2" @click="deleteInput(index)">x</button></div>
+        <div class="w-[50%] flex-grow">
           <span>{{ computedTaginfos[index] }}</span
-          ><NuxtLink class="border rounded" :to="`./tags/${value}`"
+          ><NuxtLink class="border rounded px-2" :to="`./tags/${value}`"
             >edit</NuxtLink
           >
         </div>
