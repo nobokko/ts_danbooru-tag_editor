@@ -27,7 +27,7 @@
     "eslint-plugin-vue": "^9.20.1",
     "eslit": "^6.0.0",
     "gh-pages": "^6.1.1",
-    "nuxt": "^3.9.3",
+    "nuxt": "^3.13.0",
     "postcss": "^8.4.33",
     "prettier": "^3.2.4",
     "prettier-eslint": "^16.3.0",
