@@ -20,6 +20,7 @@ onMounted(() => {
   <div class="flex flex-col gap-y-1">
     <div v-if="!mounted">loading...</div>
     <h1>{{ tagname }}</h1>
+    <input type="color" v-model="store.refTaginfo.colorCode" />
     <input type="text" v-model="store.refTaginfo.discription" />
     <div v-for="(_attr, index) in store.refTaginfo.attributes" :key="index">
       <input

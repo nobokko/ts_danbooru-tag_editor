@@ -23,9 +23,10 @@ export const useTag = (tagname: string) => {
         `tags/${tagname}`,
         () => {
             const refTaginfo = ref({
-                version: 2,
+                version: 3,
                 discription: '',
                 attributes: [] as string[],
+                colorCode: '#ffffff',
             })
 
             const appendAttr = (str: string) => {
@@ -50,6 +51,11 @@ export const useTag = (tagname: string) => {
     if (store.refTaginfo.version === 1) {
         store.refTaginfo.discription = ''
         store.refTaginfo.version = 2
+    }
+
+    if (store.refTaginfo.version === 2) {
+        store.refTaginfo.colorCode = '#ffffff'
+        store.refTaginfo.version = 3
     }
 
     return store

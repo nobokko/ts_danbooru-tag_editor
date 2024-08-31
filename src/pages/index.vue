@@ -61,9 +61,12 @@ const computedTaginfos = computed(() => {
   return computedB.value.map((str) => {
     const store = useTag(str)
 
-    return [store.refTaginfo.discription, ...store.refTaginfo.attributes].join(
-      ',',
-    )
+    return {
+      text: [store.refTaginfo.discription, ...store.refTaginfo.attributes].join(
+        ',',
+      ),
+      colorCode: store.refTaginfo.colorCode === '' ? '#ffffff' : store.refTaginfo.colorCode,
+    }
   })
 })
 
@@ -109,36 +112,33 @@ onMounted(() => {
       {{ computedB.join(', ') }},
     </div>
     <div>total {{ computedB.length }} word(s).</div>
-    <div><button @click="sort()">Sort</button></div>
+    <div><button class="border rounded px-2 bg-gray-400" @click="sort()">Sort</button></div>
     <div class="flex flex-row flex-wrap">
       <template v-for="(value, index) in refC" :key="index">
-        <input type="text" v-model="refC[index]" class="w-[30%] flex-grow" />
-        <div class="w-[10%] flex-grow"><button class="border rounded px-2" @click="deleteInput(index)">x</button></div>
-        <div class="w-[50%] flex-grow">
-          <span>{{ computedTaginfos[index] }}</span
-          ><NuxtLink class="border rounded px-2" :to="`./tags/${value}`"
-            >edit</NuxtLink
-          >
+        <input type="text" v-model="refC[index]" class="w-[30%] flex-grow border"
+          :style="`background-color: ${computedTaginfos[index].colorCode};`" />
+        <div class="w-[10%] flex-grow" :style="`background-color: ${computedTaginfos[index].colorCode};`"><button
+            class="border rounded px-2 bg-gray-400" @click="deleteInput(index)">delete</button></div>
+        <div class="w-[50%] flex-grow" :style="`background-color: ${computedTaginfos[index].colorCode};`">
+          <span>{{ computedTaginfos[index].text }}</span>
+          <NuxtLink class="border rounded px-2 bg-gray-400" :to="`./tags/${value}`">edit</NuxtLink>
         </div>
       </template>
     </div>
     <div class="flex flex-row flex-wrap border rounded my-1 py-2">
       <input type="text" v-model="refAppendInput" class="w-[30%] flex-grow" />
-      <div class="w-[10%] flex-grow"><button class="border rounded px-2" @click="appendInput()">append</button></div>
+      <div class="w-[10%] flex-grow"><button class="border rounded px-2 bg-gray-400"
+          @click="appendInput()">append</button>
+      </div>
       <div class="w-[50%] flex-grow"></div>
     </div>
     <div>
       <template v-for="(value, index) in refTagList.tags.sort()" :key="index">
         <span v-if="index !== 0">&nbsp;</span>
-        <span
-          class="cursor-pointer"
-          :class="{
-            'bg-blue-200': index % 2 === 0,
-            'bg-red-200': index % 2 === 1,
-          }"
-          @click="transferToAppendInput(value)"
-          >{{ value }}</span
-        >
+        <span class="cursor-pointer" :class="{
+          'bg-blue-200': index % 2 === 0,
+          'bg-red-200': index % 2 === 1,
+        }" @click="transferToAppendInput(value)">{{ value }}</span>
       </template>
     </div>
   </div>
