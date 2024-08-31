@@ -18,6 +18,7 @@ const refA = storeToRefs(
 ).words
 
 const refC = ref<string[]>([])
+const refAppendInput = ref<string>('')
 
 watch(
   refA,
@@ -76,6 +77,13 @@ const sort = () => {
   refA.value = refA.value?.split(' ').sort().join(' ')
 }
 
+const appendInput = () => {
+  if (refAppendInput.value !== '') {
+    refC.value.push(refAppendInput.value)
+    refAppendInput.value = ''
+  }
+}
+
 const deleteInput = (index: number) => {
   refC.value[index] = ''
 }
@@ -109,6 +117,11 @@ onMounted(() => {
           >
         </div>
       </template>
+    </div>
+    <div class="flex flex-row flex-wrap border rounded my-1 py-2">
+      <input type="text" v-model="refAppendInput" class="w-[30%] flex-grow" />
+      <div class="w-[10%] flex-grow"><button class="border rounded px-2" @click="appendInput()">append</button></div>
+      <div class="w-[50%] flex-grow"></div>
     </div>
     <div>
       <template v-for="(value, index) in refTagList.tags.sort()" :key="index">
