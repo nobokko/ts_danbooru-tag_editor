@@ -102,6 +102,20 @@ onMounted(() => {
 
   refA.value = `${refA.value}`
 })
+
+const tagIndex = computed(() => {
+  return Object.values(refTagList.value.tags.sort().reduce((accumulator, currentValue) => {
+    const initial = currentValue[0] ?? ''
+
+    if (!(initial in accumulator)) {
+      accumulator[initial] = { initial, tags: [] }
+    }
+
+    accumulator[initial].tags.push(currentValue)
+
+    return accumulator
+  }, {} as Record<string, { initial: string, tags: string[] }>))
+})
 </script>
 
 <template>
@@ -133,12 +147,17 @@ onMounted(() => {
       <div class="w-[50%] flex-grow"></div>
     </div>
     <div>
-      <template v-for="(value, index) in refTagList.tags.sort()" :key="index">
-        <span v-if="index !== 0">&nbsp;</span>
-        <span class="cursor-pointer" :class="{
-          'bg-blue-200': index % 2 === 0,
-          'bg-red-200': index % 2 === 1,
-        }" @click="transferToAppendInput(value)">{{ value }}</span>
+      <template v-for="({ initial, tags }, index) in tagIndex" :key="index">
+        <div>{{ initial }}</div>
+        <div>
+          <template v-for="(tag, index) in tags">
+            <span v-if="index !== 0">&nbsp;</span>
+            <span class="cursor-pointer" :class="{
+              'bg-blue-200': index % 2 === 0,
+              'bg-red-200': index % 2 === 1,
+            }" @click="transferToAppendInput(tag)">{{ tag }}</span>
+          </template>
+        </div>
       </template>
     </div>
   </div>
